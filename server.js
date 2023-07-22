@@ -7,7 +7,6 @@ const app = express();
 app.use(express.json()); //middleware
 
 dotenv.config();
-connectDB();
 
 app.get('/api/v1/hello', (req, res) => {
   res.send({ hello: 'Hello World' });
@@ -16,4 +15,14 @@ app.get('/api/v1/hello', (req, res) => {
 app.use('/api/v1', taskRoute);
 
 const port = process.env.PORT || 5000;
-app.listen(port, console.log(`Server running on Port: ${port}`));
+
+const start = async () => {
+  try {
+    await connectDB();
+    app.listen(port, console.log(`Server running on Port: ${port}`));
+  } catch (error) {
+    console.log('Server Shut Down, Error:', error);
+  }
+};
+
+start();
