@@ -1,5 +1,4 @@
 import Task from '../models/tasks.js';
-import moment from 'moment/moment.js';
 
 const getAllTasks = async (req, res) => {
   try {
