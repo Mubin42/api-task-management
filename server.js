@@ -4,7 +4,8 @@ import connectDB from './db.js';
 import taskRoute from './routes/tasks.js';
 
 const app = express();
-app.use(express.json()); //middleware
+//middleware
+app.use(express.json());
 
 dotenv.config();
 

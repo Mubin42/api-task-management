@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { mongoose, Schema } from 'mongoose';
 
-const TaskSchema = new mongoose.Schema({
+const TaskSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Must provide a name'],
