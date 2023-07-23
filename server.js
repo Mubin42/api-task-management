@@ -2,16 +2,13 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './db.js';
 import taskRoute from './routes/tasks.js';
+import moment from 'moment/moment.js';
 
 const app = express();
 //middleware
 app.use(express.json());
 
 dotenv.config();
-
-app.get('/api/v1/hello', (req, res) => {
-  res.send({ hello: 'Hello World' });
-});
 
 app.use('/api/v1', taskRoute);
 

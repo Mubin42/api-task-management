@@ -1,11 +1,16 @@
 import Task from '../models/tasks.js';
+import moment from 'moment/moment.js';
 
 const getAllTasks = async (req, res) => {
   try {
-    const task = await Task.find();
-    return res.status(200).json({
-      data: task,
-    });
+    const task = await Task.find()
+      .select('-description')
+      .limit(3)
+      .sort('-name');
+
+    const count = await Task.count();
+
+    return res.status(200).json({ success: true, count: count, data: task });
   } catch (error) {
     return res.status(500).json({
       status: 500,
@@ -18,7 +23,7 @@ const getTask = async (req, res) => {
   try {
     const { id: taskID } = req.params;
 
-    const task = await Task.findById({ _id: taskID });
+    const task = await Task.findById(taskID);
 
     if (!task) {
       return res.status(404).json({
@@ -40,7 +45,10 @@ const getTask = async (req, res) => {
 
 const createTask = async (req, res) => {
   try {
-    const task = await Task.create(req.body);
+    //const task = await Task.create(req.body;)
+
+    const task = new Task(req.body);
+    const saved = await task.save();
 
     return res.status(201).json({
       task,
