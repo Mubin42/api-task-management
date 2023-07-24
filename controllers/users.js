@@ -1,9 +1,14 @@
 import User from '../models/users.js';
 
 const getAllUser = async (req, res) => {
+  const { sort, page, perPage, skip } = req.meta;
   try {
     //get all user from db
-    const users = await User.find();
+    const users = await User.find()
+      .select('-visibility')
+      .sort(sort)
+      .limit(perPage)
+      .skip(skip);
     //count total users
     const count = await User.count();
 
@@ -16,10 +21,22 @@ const getAllUser = async (req, res) => {
   }
 };
 
-const getUser = (req, res) => {
+
+
+const getUser = async (req, res) => {
   try {
+    const { id: userID } = req.params;
+    const user = await User.findById(userID);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `No user id with : ${userID}`,
+      });
+    }
     return res.status(200).json({
-      message: 'Getting Single User',
+      success: true,
+      data: user,
     });
   } catch (error) {
     return res.status(500).json({
@@ -46,10 +63,28 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   try {
+    const { id: userID } = req.params;
+    const user = await User.findByIdAndUpdate(
+      {
+        _id: userID,
+      },
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `No user id with: ${userID}`,
+      });
+    }
+
     return res.status(200).json({
-      message: 'Update an existing user',
+      success: true,
+      id: userID,
+      data: req.body,
     });
   } catch (error) {
     return res.status(500).json({
@@ -59,10 +94,24 @@ const updateUser = (req, res) => {
   }
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
   try {
+    const { id: userID } = req.params;
+    const user = await User.findByIdAndUpdate(
+      { _id: userID },
+      { visibility: false },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `No user id with " ${userID}`,
+      });
+    }
     return res.status(200).json({
-      message: 'Delete a user',
+      success: true,
+      data: user,
     });
   } catch (error) {
     return res.status(500).json({

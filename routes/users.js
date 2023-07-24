@@ -1,5 +1,5 @@
 import express from 'express';
-
+import { sort } from '../middleware/sort.js';
 import {
   getAllUser,
   getUser,
@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.get('/users', getAllUser);
+router.get('/users', sort, getAllUser);
 router.post('/users', createUser);
 router.get('/user/:id', getUser);
 router.patch('/user/:id', updateUser);

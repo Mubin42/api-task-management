@@ -18,6 +18,7 @@ const UserSchema = new Schema(
       type: Number,
     },
     address: {
+      type: Object,
       flat: { type: String, trim: true },
       streets: { type: String, trim: true },
       area: { type: String, trim: true },
